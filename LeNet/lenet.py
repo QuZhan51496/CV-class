@@ -37,6 +37,41 @@ class LeNet(nn.Module):
         return self.net(x)
 
 
+class LeNet_task2(LeNet):
+    def __init__(self, num_classes=10):
+        super(LeNet_task2, self).__init__(num_classes)
+        self.net = nn.Sequential(
+            nn.Conv2d(1, 3, kernel_size=5, padding=2), nn.Sigmoid(),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(3, 8, kernel_size=5), nn.Sigmoid(),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Flatten(),
+            nn.Linear(8 * 5 * 5, 120), nn.Sigmoid(),
+            nn.Linear(120, 84), nn.Sigmoid(),
+            nn.Linear(84, num_classes)
+        )
+        self.reset_parameters()
+
+
+class LeNet_task3(LeNet):
+    def __init__(self, num_classes=10, dropout=0.1):
+        super(LeNet_task3, self).__init__(num_classes)
+        self.net = nn.Sequential(
+            nn.Conv2d(1, 6, kernel_size=5, padding=2), nn.Sigmoid(),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Dropout(dropout),
+            nn.Conv2d(6, 16, kernel_size=5), nn.Sigmoid(),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Dropout(dropout),
+            nn.Flatten(),
+            nn.Linear(16 * 5 * 5, 120), nn.Sigmoid(),
+            nn.Dropout(dropout),
+            nn.Linear(120, 84), nn.Sigmoid(),
+            nn.Linear(84, num_classes)
+        )
+        self.reset_parameters()
+
+
 def train(train_loader, test_loader, model, optimizer, epochs, device):
     best_test_loss = float('inf')
     train_loss_log = []
